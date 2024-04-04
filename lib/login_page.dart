@@ -33,6 +33,7 @@ class _LoginPageState extends State<LoginPage> {
           Container(
             padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
             child: TextField(
+              controller: emailController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(40.0),
@@ -44,6 +45,7 @@ class _LoginPageState extends State<LoginPage> {
           Container(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
+              controller: passwordController,
               obscureText: true,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
@@ -61,7 +63,17 @@ class _LoginPageState extends State<LoginPage> {
                   minimumSize: const Size.fromHeight(50),
                 ),
                 child: const Text('Log In'),
-                onPressed: () {},
+                onPressed: () {
+                  //emailController.text.toString()
+                  firebaseAuth
+                      .signInWithEmailAndPassword(
+                          email: emailController.text.toString(),
+                          password: passwordController.text.toString())
+                      .then((value) => Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(builder: (context) => MainScreen()),
+                          (route) => false))
+                      .onError((error, stackTrace) => print("error $error"));
+                },
               )),
           TextButton(
             onPressed: () {},
@@ -77,18 +89,9 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 ElevatedButton(
                     onPressed: () {
-                      if (formKey.currentState?.validate() == true) {
-                        firebaseAuth
-                            .signInWithEmailAndPassword(
-                                email: emailController.text.toString(),
-                                password: passwordController.text.toString())
-                            .then((value) => Navigator.of(context)
-                                .pushAndRemoveUntil(
-                                    MaterialPageRoute(
-                                        builder: (context) => MainScreen()),
-                                    (route) => false))
-                            .onError((error, stackTrace) => null);
-                      }
+                      // if (formKey.currentState?.validate() == true) {
+
+                      // }
                     },
                     child: Text("Login")),
               ],
